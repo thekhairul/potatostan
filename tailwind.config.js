@@ -1,11 +1,3 @@
-const spacing = {
-  sm: '5px',
-  md: '10px',
-  default: '15px',
-  lg: '20px',
-  xl: '30px'
-};
-
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -62,8 +54,13 @@ export default {
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
       },
-      padding: spacing,
-      margin: spacing,
+      spacing: {
+        sm: '5px',
+        md: '10px',
+        default: '15px',
+        lg: '20px',
+        xl: '30px'
+      },
       boxShadow: {
         default: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
       }
