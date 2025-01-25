@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import IconClose from '@/components/icons/IconClose.vue';
 import { onMounted, onUnmounted, watchEffect } from 'vue';
 interface ModalProps {
   show: boolean;
@@ -21,6 +22,7 @@ onMounted(() => {
 });
 onUnmounted(() => {
   document.removeEventListener('keydown', handleEscape);
+  document.body.style.overflow = '';
 });
 watchEffect(() => {
   if (props.show) {
@@ -41,7 +43,9 @@ watchEffect(() => {
       >
         <div class="px-5 py-4 flex gap-2 justify-between border-b border-grayscale-500">
           <slot name="title">Modal</slot>
-          <button @click="close" aria-label="Close modal">x</button>
+          <button @click="close" aria-label="Close modal">
+            <icon-close class="w-4 h-4 text-grayscale-300" />
+          </button>
         </div>
         <slot></slot>
         <div class="p-5 border-t border-grayscale-500" v-if="$slots.footer">
