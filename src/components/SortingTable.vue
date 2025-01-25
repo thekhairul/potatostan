@@ -13,7 +13,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update', value: TableRow[]): void;
 }>();
-const model = computed({
+const sortModel = computed({
   get: () => props.tableData,
   set: (value: TableRow[]) => {
     emit('update', value);
@@ -39,7 +39,7 @@ const isDragging = ref(false);
       </div>
       <!-- Table body -->
       <draggable
-        v-model="model"
+        v-model="sortModel"
         tag="div"
         item-key="potato"
         handle=".handle"
@@ -70,7 +70,7 @@ const isDragging = ref(false);
 </template>
 
 <style scoped>
-.ps-table-draggable *{
-    border-right: 0;
+.ps-table-draggable * {
+  border-right: 0;
 }
 </style>

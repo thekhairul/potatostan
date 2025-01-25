@@ -58,3 +58,13 @@ export function generatePeople(count: number) {
 
   return people;
 }
+
+export function calculateScore(totalPeople: number, secondsTaken: number) {
+  if (secondsTaken === 0) return 0; // Avoid division by zero
+
+  const baseScore = 50; // Base score to ensure non-zero scores
+  const efficiencyFactor = (totalPeople / secondsTaken) * 100;
+  const score = Math.round(baseScore + efficiencyFactor);
+
+  return score;
+}

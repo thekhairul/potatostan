@@ -39,6 +39,10 @@ onMounted(() => {
 onUnmounted(() => {
   stopCountdown();
 });
+
+defineExpose({
+  timeTaken,
+});
 </script>
 
 <template>

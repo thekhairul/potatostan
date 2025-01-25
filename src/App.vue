@@ -2,8 +2,8 @@
 import CountDown from '@/components/CountDown.vue';
 import SortingTable, { type TableRow } from '@/components/SortingTable.vue';
 import StartSortingBtn from '@/components/StartSortingBtn.vue';
-import { generatePeople } from '@/utils/training';
-import { ref } from 'vue';
+import { calculateScore, generatePeople } from '@/utils/training';
+import { ref, useTemplateRef, watch } from 'vue';
 
 // types
 enum Status {
@@ -15,12 +15,15 @@ enum Status {
 // data
 const status = ref<Status>(Status.Start);
 const notice = ref(
-  "Welcome to Potatostan. Start training by clicking the button above. Let's make Potatostan great again!",
+  "Welcome to Potatostan 👋. Start training by clicking the button above. Let's make Potatostan great again!",
 );
 const totalPeople = ref(0);
 const trainingData = ref<TableRow[]>([]);
+// refs
+const timerRef = useTemplateRef('timer');
 // methods
 const startTraining = (total: number) => {
+  resetData();
   status.value = Status.Training;
   totalPeople.value = total;
   trainingData.value = generatePeople(total);
@@ -30,10 +33,26 @@ const updateTrainingData = (data: TableRow[]) => {
 };
 const handleTimeout = () => {
   status.value = Status.Fail;
+  notice.value = 'Time is up! 🙁 You failed to sort the table in time. Try again!';
+};
+const handleSuccess = () => {
+  status.value = Status.Success;
+  const elapsedTime = timerRef.value?.timeTaken || 0;
+  const score = calculateScore(totalPeople.value, elapsedTime);
+  notice.value = `Congratulations! 🎉 You've successfully sorted the table in time. Your score is ${score}.`;
+};
+const resetData = () => {
   totalPeople.value = 0;
   trainingData.value = [];
-  notice.value = 'Time is up! You failed to sort the table in time. Try again!';
-};
+}
+// effects
+watch(trainingData, (newData) => {
+  const isSorted = newData.every((person, index, arr) => {
+    if (index === 0) return true;
+    return person.potato <= arr[index - 1].potato;
+  });
+  if (isSorted) handleSuccess();
+});
 </script>
 
 <template>
@@ -42,6 +61,7 @@ const handleTimeout = () => {
     <nav>
       <count-down
         v-if="status === Status.Training"
+        ref="timer"
         :minutes="(5 * totalPeople) / 20"
         @finish="handleTimeout"
       />

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generatePeople, randomizeArray } from '../training';
+import { calculateScore, generatePeople, randomizeArray } from '../training';
 
 describe('Training Utilities', () => {
   describe('randomizeArray', () => {
@@ -28,6 +28,30 @@ describe('Training Utilities', () => {
       const people = generatePeople(count);
       const potatoes = people.map((person) => person.potato);
       expect(new Set(potatoes).size).toBe(count);
+    });
+  });
+
+  describe('calculateScore', () => {
+    it('should return 0 if secondsTaken is 0', () => {
+      const score = calculateScore(10, 0);
+      expect(score).toBe(0);
+    });
+
+    it('should calculate the score correctly for given totalPeople and secondsTaken', () => {
+      const score = calculateScore(10, 20);
+      expect(score).toBeGreaterThan(50); // Base score is 50, so it should be greater
+    });
+
+    it('should return a higher score for more people sorted in less time', () => {
+      const score1 = calculateScore(10, 20);
+      const score2 = calculateScore(20, 20);
+      expect(score2).toBeGreaterThan(score1);
+    });
+
+    it('should return a lower score for fewer people sorted in more time', () => {
+      const score1 = calculateScore(10, 20);
+      const score2 = calculateScore(10, 40);
+      expect(score2).toBeLessThan(score1);
     });
   });
 });
